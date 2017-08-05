@@ -1,4 +1,4 @@
-package v1.post
+package v1.client
 
 import javax.inject.Inject
 
@@ -12,13 +12,13 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 
 /**
-  * A wrapped request for post resources.
+  * A wrapped request for client resources.
   *
   * This is commonly used to hold request-specific information like
   * security credentials, and useful shortcut methods.
   */
-trait PostRequestHeader extends MessagesRequestHeader with PreferredMessagesProvider
-class PostRequest[A](request: Request[A], val messagesApi: MessagesApi) extends WrappedRequest(request) with PostRequestHeader
+trait ClientRequestHeader extends MessagesRequestHeader with PreferredMessagesProvider
+class ClientRequest[A](request: Request[A], val messagesApi: MessagesApi) extends WrappedRequest(request) with ClientRequestHeader
 
 /**
  * Provides an implicit marker that will show the request in all logger statements.
@@ -41,31 +41,31 @@ trait RequestMarkerContext {
 }
 
 /**
-  * The action builder for the Post resource.
+  * The action builder for the Client resource.
   *
   * This is the place to put logging, metrics, to augment
   * the request with contextual data, and manipulate the
   * result.
   */
-class PostActionBuilder @Inject()(messagesApi: MessagesApi, playBodyParsers: PlayBodyParsers)
+class ClientActionBuilder @Inject()(messagesApi: MessagesApi, playBodyParsers: PlayBodyParsers)
                                  (implicit val executionContext: ExecutionContext)
-    extends ActionBuilder[PostRequest, AnyContent]
+    extends ActionBuilder[ClientRequest, AnyContent]
     with RequestMarkerContext
     with HttpVerbs {
 
   val parser: BodyParser[AnyContent] = playBodyParsers.anyContent
 
-  type PostRequestBlock[A] = PostRequest[A] => Future[Result]
+  type ClientRequestBlock[A] = ClientRequest[A] => Future[Result]
 
   private val logger = Logger(this.getClass)
 
   override def invokeBlock[A](request: Request[A],
-                              block: PostRequestBlock[A]): Future[Result] = {
+                              block: ClientRequestBlock[A]): Future[Result] = {
     // Convert to marker context and use request in block
     implicit val markerContext: MarkerContext = requestHeaderToMarkerContext(request)
     logger.trace(s"invokeBlock: ")
 
-    val future = block(new PostRequest(request, messagesApi))
+    val future = block(new ClientRequest(request, messagesApi))
 
     future.map { result =>
       request.method match {
@@ -79,28 +79,28 @@ class PostActionBuilder @Inject()(messagesApi: MessagesApi, playBodyParsers: Pla
 }
 
 /**
- * Packages up the component dependencies for the post controller.
+ * Packages up the component dependencies for the client controller.
  *
  * This is a good way to minimize the surface area exposed to the controller, so the
  * controller only has to have one thing injected.
  */
-case class PostControllerComponents @Inject()(postActionBuilder: PostActionBuilder,
-                                               postResourceHandler: PostResourceHandler,
+case class ClientControllerComponents @Inject()(clientActionBuilder: ClientActionBuilder,
+                                               clientResourceHandler: ClientResourceHandler,
                                                actionBuilder: DefaultActionBuilder,
                                                parsers: PlayBodyParsers,
                                                messagesApi: MessagesApi,
                                                langs: Langs,
                                                fileMimeTypes: FileMimeTypes,
-                                               executionContext: scala.concurrent.ExecutionContext)
+                                               executionContext: ExecutionContext)
   extends ControllerComponents
 
 /**
- * Exposes actions and handler to the PostController by wiring the injected state into the base class.
+ * Exposes actions and handler to the ClientController by wiring the injected state into the base class.
  */
-class PostBaseController @Inject()(pcc: PostControllerComponents) extends BaseController with RequestMarkerContext {
+class ClientBaseController @Inject()(pcc: ClientControllerComponents) extends BaseController with RequestMarkerContext {
   override protected def controllerComponents: ControllerComponents = pcc
 
-  def PostAction: PostActionBuilder = pcc.postActionBuilder
+  def ClientAction: ClientActionBuilder = pcc.clientActionBuilder
 
-  def postResourceHandler: PostResourceHandler = pcc.postResourceHandler
+  def clientResourceHandler: ClientResourceHandler = pcc.clientResourceHandler
 }
