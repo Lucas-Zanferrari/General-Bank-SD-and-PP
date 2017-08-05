@@ -48,14 +48,6 @@ class ClientController @Inject()(cc: ClientControllerComponents)(implicit ec: Ex
     }
   }
 
-  def lifeStatus(): Action[AnyContent] = ClientAction.async { implicit request =>
-    Future {
-      Ok(JsObject(Seq(
-        "message" -> JsString("I'm alive!")
-      )))
-    }
-  }
-
   private def processJsonClient[A]()(implicit request: ClientRequest[A]): Future[Result] = {
     def failure(badForm: Form[ClientFormInput]) = {
       Future.successful(BadRequest(badForm.errorsAsJson))

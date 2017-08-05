@@ -27,9 +27,7 @@ class ClientRouter @Inject()(controller: ClientController) extends SimpleRouter 
 
     case GET(p"/$id") =>
       controller.show(id)
-
-    case GET(p"/alive") =>
-      controller.lifeStatus
+      
   }
 
 }
