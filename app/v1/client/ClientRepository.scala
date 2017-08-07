@@ -8,7 +8,35 @@ import play.api.{Logger, MarkerContext}
 
 import scala.concurrent.Future
 
-final case class ClientData(id: ClientId, name: String, balance: String)
+final case class ClientData(id: ClientId, name: String, initial: String)
+{
+  def this(id: ClientId, name:String) = this(id: ClientId, name, "0")
+
+  private var bal: Float = initial.toFloat
+
+  def balance: String = bal.toString
+
+  def deposit(amount: Float): Boolean ={
+    require(amount > 0)
+    bal += amount
+    true
+  }
+
+  def withdraw(amount: Float): Boolean =
+    if (amount > bal) false
+    else {
+      bal -= amount
+      true
+    }
+
+  def internalTransfer(receiver: ClientData, amount: Float): Boolean = {
+    if (receiver != null && withdraw(amount)) {
+      receiver.deposit(amount)
+      true
+    }
+    else false
+  }
+}
 
 class ClientId private (val underlying: Int) extends AnyVal {
   override def toString: String = underlying.toString
@@ -35,6 +63,8 @@ trait ClientRepository {
   def list()(implicit mc: MarkerContext): Future[Iterable[ClientData]]
 
   def get(id: ClientId)(implicit mc: MarkerContext): Future[Option[ClientData]]
+
+  def getOne(id: ClientId)(implicit mc: MarkerContext): Option[ClientData]
 }
 
 /**
@@ -83,4 +113,19 @@ class ClientRepositoryImpl @Inject()()(implicit ec: ClientExecutionContext) exte
     }
   }
 
+  override def getOne(id: ClientId)(implicit mc: MarkerContext): Option[ClientData] = {
+      val client = clientList.find(client => client.id == id)
+      logger.trace(s"getOne: client = $client")
+      client
+  }
+
+/*
+  override def balance(id: ClientId)(implicit mc: MarkerContext): Future[String] = {
+    Future{
+      val client = clientList.find(client => client.id == id)
+      logger.trace(s"balance: client = $client")
+      client.get.balance
+    }
+  }
+*/
 }

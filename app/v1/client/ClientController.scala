@@ -8,7 +8,7 @@ import play.api.libs.json.{JsObject, JsString, Json}
 import play.api.mvc._
 import scala.concurrent.{ExecutionContext, Future}
 
-case class ClientFormInput(name: String, balance: String)
+case class ClientFormInput(name: String, initial: String)
 
 /**
   * Takes HTTP requests and produces JSON.
@@ -24,7 +24,7 @@ class ClientController @Inject()(cc: ClientControllerComponents)(implicit ec: Ex
     Form(
       mapping(
         "name" -> nonEmptyText,
-        "balance" -> text
+        "initial" -> text
       )(ClientFormInput.apply)(ClientFormInput.unapply)
     )
   }
@@ -44,6 +44,34 @@ class ClientController @Inject()(cc: ClientControllerComponents)(implicit ec: Ex
   def show(id: String): Action[AnyContent] = ClientAction.async { implicit request =>
     logger.trace(s"show: id = $id")
     clientResourceHandler.lookup(id).map { client =>
+      Ok(Json.toJson(client))
+    }
+  }
+
+  def balance(id: String): Action[AnyContent] = ClientAction.async { implicit request =>
+    logger.trace(s"balance: id = $id")
+    clientResourceHandler.getBalance(id).map { client =>
+      Ok(Json.toJson(client))
+    }
+  }
+
+  def withdraw(id: String, amount: String): Action[AnyContent] = ClientAction.async { implicit request =>
+    logger.trace(s"withdraw: id = $id; amount = $amount")
+    clientResourceHandler.makeWithdraw(id,amount).map { client =>
+      Ok(Json.toJson(client))
+    }
+  }
+
+  def deposit(id: String, amount: String): Action[AnyContent] = ClientAction.async { implicit request =>
+    logger.trace(s"deposit: id = $id; amount = $amount")
+    clientResourceHandler.makeDeposit(id,amount).map { client =>
+      Ok(Json.toJson(client))
+    }
+  }
+
+  def internalTransfer(id:String, receiver: String, amount: String): Action[AnyContent] = ClientAction.async { implicit request =>
+    logger.trace(s"internalTransfer: id = $id; receiverId = $receiver; amount = $amount")
+    clientResourceHandler.makeInternalTransfer(id,receiver,amount).map { client =>
       Ok(Json.toJson(client))
     }
   }
