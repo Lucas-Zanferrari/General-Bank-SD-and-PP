@@ -60,6 +60,8 @@ class ClientResourceHandler @Inject()(
     }
   }
 
+  def remove(id: String)(implicit mc: MarkerContext) = clientRepository.delete(ClientId(id))
+
   private def createClientResource(p: ClientData): ClientResource = {
     ClientResource(p.id.toString, routerProvider.get.link(p.id), p.name, p.initial)
   }
@@ -85,8 +87,7 @@ class ClientResourceHandler @Inject()(
   def makeInternalTransfer(id:String, receiver: String, amount: String)(implicit mc: MarkerContext): Future[Option[Boolean]] = {
     val clientFuture = clientRepository.get(ClientId(id))
     val receiverClient = clientRepository.getOne(ClientId(receiver))
-    clientFuture.map { maybeClientData =>
-      maybeClientData.map(clientData => clientData.internalTransfer(receiverClient.get,amount.toFloat))
+    clientFuture.map { _.map(_.internalTransfer(receiverClient.get,amount.toFloat))
     }
   }
 }
