@@ -31,8 +31,8 @@ class ClientController @Inject()(cc: ClientControllerComponents)(implicit ec: Ex
 
   def index: Action[AnyContent] = ClientAction.async { implicit request =>
     logger.trace("index: ")
-    clientResourceHandler.find.map { clients =>
-      Ok(Json.toJson(clients))
+    clientResourceHandler.find.map { clientes =>
+      Ok(Json.toJson(clientes))
     }
   }
 
@@ -45,6 +45,16 @@ class ClientController @Inject()(cc: ClientControllerComponents)(implicit ec: Ex
     logger.trace(s"show: id = $id")
     clientResourceHandler.lookup(id).map { client =>
       Ok(Json.toJson(client))
+    }
+  }
+
+  def remove(id: String): Action[AnyContent] = ClientAction.async { implicit request =>
+    logger.trace(s"remove: id = $id")
+    clientResourceHandler.remove(id)
+    Future {
+      Ok(JsObject(Seq(
+        "message" -> JsString(s"client #$id removed successfully")
+      )))
     }
   }
 

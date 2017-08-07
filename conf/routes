@@ -1,6 +1,6 @@
 GET        /                         controllers.HomeController.index
 
-->         /v1/clients               v1.client.ClientRouter
+->         /v1/clientes               v1.client.ClientRouter
 
 GET        /v1/alive                 controllers.HomeController.lifeStatus
 

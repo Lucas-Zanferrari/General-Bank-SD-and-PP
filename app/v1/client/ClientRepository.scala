@@ -30,10 +30,7 @@ final case class ClientData(id: ClientId, name: String, initial: String)
     }
 
   def internalTransfer(receiver: ClientData, amount: Float): Boolean = {
-    if (receiver != null && withdraw(amount)) {
-      receiver.deposit(amount)
-      true
-    }
+    if (receiver != null && withdraw(amount)) receiver.deposit(amount)
     else false
   }
 }
@@ -58,7 +55,9 @@ class ClientExecutionContext @Inject()(actorSystem: ActorSystem) extends CustomE
 trait ClientRepository {
   def nextId()(implicit mc: MarkerContext): Int
 
-  def create(data: ClientData)(implicit mc: MarkerContext): Future[ClientId]
+  def create(data: ClientData)(implicit mc: MarkerContext): Future[List[ClientData]]
+
+  def delete(data: ClientId)(implicit mc: MarkerContext)
 
   def list()(implicit mc: MarkerContext): Future[Iterable[ClientData]]
 
@@ -105,27 +104,40 @@ class ClientRepositoryImpl @Inject()()(implicit ec: ClientExecutionContext) exte
     }
   }
 
-  override def create(data: ClientData)(implicit mc: MarkerContext): Future[ClientId] = {
+  override def create(data: ClientData)(implicit mc: MarkerContext): Future[List[ClientData]] = {
     Future {
       logger.trace(s"create: data = $data")
       clientList = clientList.::(data)
-      data.id
+      clientList
     }
+  }
+
+  override def delete(id: ClientId)(implicit mc: MarkerContext) {
+    Future {
+      logger.trace(s"delete: id = $id")
+      clientList = clientList.filter(client => client.id != id)
+    }
+  }
+
+  private def findAccount(id: ClientId, vetor: List[ClientData]): Option[ClientData] = {
+    val pos = buscaTR[ClientId](vetor, id, _ == _)
+    if (pos != -1) Option{vetor(pos)}
+    else null
+  }
+
+  private def buscaTR[A](vetor: List[ClientData], x: A, f: (ClientId, A) => Boolean): Int = {
+    @annotation.tailrec
+    def go(i: Int): Int = {
+      if (i < 0) -1
+      else if (f(vetor(i).id, x)) i
+      else go(i - 1)
+    }
+    go(vetor.length - 1)
   }
 
   override def getOne(id: ClientId)(implicit mc: MarkerContext): Option[ClientData] = {
-      val client = clientList.find(client => client.id == id)
-      logger.trace(s"getOne: client = $client")
-      client
+    val client = findAccount(id,clientList)
+    logger.trace(s"getOne: client = $client")
+    client
   }
-
-/*
-  override def balance(id: ClientId)(implicit mc: MarkerContext): Future[String] = {
-    Future{
-      val client = clientList.find(client => client.id == id)
-      logger.trace(s"balance: client = $client")
-      client.get.balance
-    }
-  }
-*/
 }
