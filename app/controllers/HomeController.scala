@@ -4,7 +4,6 @@ import javax.inject.Inject
 import play.api.libs.json.{JsObject, JsString}
 import play.api.mvc._
 
-import scala.concurrent.Future
 
 /**
   * A very small controller that renders a home page.
