@@ -11,9 +11,9 @@ class GatlingSpec extends Simulation {
 
   // change this to another machine, make sure you have Play running in producion mode
   // i.e. sbt stage / sbt dist and running the script
-  val httpConf = http.baseURL("http://localhost:9001/v1/clientes")
+  val httpConf = http.baseURL("http://localhost:9000/v1/clientes")
 
-  val readClients = scenario("Clientes").exec(Index.refreshManyTimes)
+  val readClients = scenario("Clients").exec(Index.refreshManyTimes)
 
   setUp(
     // For reference, this hits 25% CPU on a 5820K with 32 GB, running both server and load test.

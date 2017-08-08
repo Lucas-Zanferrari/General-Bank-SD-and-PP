@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule
 import net.codingwell.scalaguice.ScalaModule
 import play.api.{Configuration, Environment}
 import v1.client._
+import services.StartupJob
 
 /**
   * Sets up custom components for Play.
@@ -15,6 +16,7 @@ class Module(environment: Environment, configuration: Configuration)
     with ScalaModule {
 
   override def configure() = {
+    bind[StartupJob].asEagerSingleton()
     bind[ClientRepository].to[ClientRepositoryImpl].in[Singleton]
   }
 }
