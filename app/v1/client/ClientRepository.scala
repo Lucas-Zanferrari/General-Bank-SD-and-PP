@@ -29,10 +29,9 @@ final case class ClientData(id: ClientId, name: String, initial: String)
       true
     }
 
-  def internalTransfer(receiver: ClientData, amount: Float): Boolean = {
-    if (receiver != null && withdraw(amount)) receiver.deposit(amount)
+  def transfer(receiver: Option[ClientData], amount: Float): Boolean =
+    if (receiver != null && withdraw(amount)) receiver.get.deposit(amount)
     else false
-  }
 }
 
 class ClientId private (val underlying: Int) extends AnyVal {

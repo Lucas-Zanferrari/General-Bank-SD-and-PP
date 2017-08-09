@@ -86,6 +86,13 @@ class ClientController @Inject()(cc: ClientControllerComponents)(implicit ec: Ex
     }
   }
 
+  def externalTransfer(id:String, bank: String, receiver: String, amount: String): Action[AnyContent] = ClientAction.async { implicit request =>
+    logger.trace(s"externalTransfer: id = $id;bank = $bank; receiverId = $receiver; amount = $amount")
+    clientResourceHandler.makeExternalTransfer(id,bank,receiver,amount).map { client =>
+      Ok(Json.toJson(client))
+    }
+  }
+
   private def processJsonClient[A]()(implicit request: ClientRequest[A]): Future[Result] = {
     def failure(badForm: Form[ClientFormInput]) = {
       Future.successful(BadRequest(badForm.errorsAsJson))

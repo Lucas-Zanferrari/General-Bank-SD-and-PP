@@ -6,6 +6,7 @@ import play.api.MarkerContext
 
 import scala.concurrent.{ExecutionContext, Future}
 import play.api.libs.json._
+import services.TransferRequest
 
 /**
   * DTO for displaying client information.
@@ -87,7 +88,11 @@ class ClientResourceHandler @Inject()(
   def makeInternalTransfer(id:String, receiver: String, amount: String)(implicit mc: MarkerContext): Future[Option[Boolean]] = {
     val clientFuture = clientRepository.get(ClientId(id))
     val receiverClient = clientRepository.getOne(ClientId(receiver))
-    clientFuture.map { _.map(_.internalTransfer(receiverClient.get,amount.toFloat))
-    }
+    clientFuture.map { _.map(_.transfer(receiverClient,amount.toFloat))}
+  }
+
+  def makeExternalTransfer(id:String, bank: String, receiver: String, amount: String)(implicit mc: MarkerContext): Future[Option[Boolean]] = {
+    val clientFuture = clientRepository.get(ClientId(id))
+    //val k = new TransferRequest(clientFuture,bank,receiver,amount)
   }
 }
