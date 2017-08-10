@@ -35,16 +35,16 @@ class ClientRouter @Inject()(controller: ClientController) extends SimpleRouter 
       controller.balance(id)
 
     case POST(p"/$id/saque/$amount") =>
-      controller.withdraw(id,amount)
+      controller.withdraw(id, amount)
 
     case POST(p"/$id/deposito/$amount") =>
-      controller.deposit(id,amount)
+      controller.deposit(id, amount)
 
-    case POST(p"/$id/transferencia/$receiver/$amount") =>
-      controller.internalTransfer(id,receiver,amount)
+    case POST(p"/$id/transferencia/$receiverId/$amount") =>
+      controller.internalTransfer(id, receiverId, amount)
 
-    case POST(p"/$id/TED/$bank/$receiver/$amount") =>
-      controller.externalTransfer(id,bank,receiver,amount)
+    case POST(p"/$id/TED/$targetBankId/$receiverId/$amount") =>
+      controller.externalTransfer(id, targetBankId, receiverId, amount)
   }
 
 }

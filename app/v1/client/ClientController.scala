@@ -1,7 +1,6 @@
 package v1.client
 
 import javax.inject.Inject
-
 import play.api.Logger
 import play.api.data.Form
 import play.api.libs.json.{JsObject, JsString, Json}
@@ -67,28 +66,28 @@ class ClientController @Inject()(cc: ClientControllerComponents)(implicit ec: Ex
 
   def withdraw(id: String, amount: String): Action[AnyContent] = ClientAction.async { implicit request =>
     logger.trace(s"withdraw: id = $id; amount = $amount")
-    clientResourceHandler.makeWithdraw(id,amount).map { client =>
+    clientResourceHandler.makeWithdraw(id, amount).map { client =>
       Ok(Json.toJson(client))
     }
   }
 
   def deposit(id: String, amount: String): Action[AnyContent] = ClientAction.async { implicit request =>
     logger.trace(s"deposit: id = $id; amount = $amount")
-    clientResourceHandler.makeDeposit(id,amount).map { client =>
+    clientResourceHandler.makeDeposit(id, amount).map { client =>
       Ok(Json.toJson(client))
     }
   }
 
   def internalTransfer(id:String, receiver: String, amount: String): Action[AnyContent] = ClientAction.async { implicit request =>
     logger.trace(s"internalTransfer: id = $id; receiverId = $receiver; amount = $amount")
-    clientResourceHandler.makeInternalTransfer(id,receiver,amount).map { client =>
+    clientResourceHandler.makeInternalTransfer(id, receiver, amount).map { client =>
       Ok(Json.toJson(client))
     }
   }
 
-  def externalTransfer(id:String, bank: String, receiver: String, amount: String): Action[AnyContent] = ClientAction.async { implicit request =>
-    logger.trace(s"externalTransfer: id = $id;bank = $bank; receiverId = $receiver; amount = $amount")
-    clientResourceHandler.makeExternalTransfer(id,bank,receiver,amount).map { client =>
+  def externalTransfer(id:String, targetBankId: String, receiverId: String, amount: String): Action[AnyContent] = ClientAction.async { implicit request =>
+    logger.trace(s"externalTransfer: id = $id; target bank = $targetBankId; receiverId = $receiverId; amount = $amount")
+    clientResourceHandler.makeExternalTransfer(id, targetBankId, receiverId, amount).map { client =>
       Ok(Json.toJson(client))
     }
   }

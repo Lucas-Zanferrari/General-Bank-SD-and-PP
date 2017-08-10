@@ -10,7 +10,7 @@ import scala.concurrent.Future
 
 final case class ClientData(id: ClientId, name: String, initial: String)
 {
-  def this(id: ClientId, name:String) = this(id: ClientId, name, "0")
+  def this(id: ClientId, name: String) = this(id: ClientId, name, "0")
 
   private var bal: Float = initial.toFloat
 
