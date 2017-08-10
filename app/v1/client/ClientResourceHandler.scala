@@ -79,10 +79,10 @@ class ClientResourceHandler @Inject()(
     clientRepository.internalTransfer(ClientId(id), ClientId(receiverId), amount)
   }
 
-  def makeExternalTransfer(id: String, targetBankId: String, receiverId: String, amount: String)(implicit mc: MarkerContext): Future[Option[Boolean]] = {
-    val clientFuture = clientRepository.get(ClientId(id))
-    val params = TransferParameterInterface(targetBankId, receiverId, amount)
-    requester.run(params)
-    clientFuture.map { _.map(clientData => clientData.withdraw(amount.toFloat))}
-  }
+//  def makeExternalTransfer(id: String, targetBankId: String, receiverId: String, amount: String)(implicit mc: MarkerContext): Future[Option[Boolean]] = {
+//    val clientFuture = clientRepository.get(ClientId(id))
+//    val params = TransferParameterInterface(targetBankId, receiverId, amount)
+//    requester.run(params)
+//    clientFuture.map { _.map(clientData => clientData.withdraw(amount.toFloat))}
+//  }
 }

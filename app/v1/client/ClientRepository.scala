@@ -33,15 +33,17 @@ trait ClientRepository {
 
   def list()(implicit mc: MarkerContext): Future[Iterable[ClientData]]
 
+  // get() and getOne() are very similar.
+  // The 1st returns null if the client if not found.
+  // The 2nd throws an IllegalArgumentException
   def get(id: ClientId)(implicit mc: MarkerContext): Future[Option[ClientData]]
+  def getOne(id: ClientId)(implicit mc: MarkerContext): Future[Option[ClientData]]
 
   def withdraw(id: ClientId, amount: Float)(implicit mc: MarkerContext): Future[ClientData]
 
   def deposit(id: ClientId, amount: Float)(implicit mc: MarkerContext): Future[ClientData]
 
   def internalTransfer(id: ClientId, receivedId: ClientId, amount: Float)(implicit mc: MarkerContext): Future[Unit]
-
-  def getOne(id: ClientId)(implicit mc: MarkerContext): Future[Option[ClientData]]
 }
 
 /**
