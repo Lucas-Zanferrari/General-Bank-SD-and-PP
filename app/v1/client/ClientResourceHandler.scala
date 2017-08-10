@@ -35,7 +35,7 @@ object ClientResource {
   */
 class ClientResourceHandler @Inject()(
     routerProvider: Provider[ClientRouter],
-    clientRepository: ClientRepository, requestter: TransferRequest)(implicit ec: ExecutionContext) {
+    clientRepository: ClientRepository, requester: TransferRequest)(implicit ec: ExecutionContext) {
 
   def create(clientInput: ClientFormInput)(implicit mc: MarkerContext): Future[ClientResource] = {
     val nextId = clientRepository.nextId()
@@ -93,7 +93,7 @@ class ClientResourceHandler @Inject()(
   def makeExternalTransfer(id:String, bank: String, receiver: String, amount: String)(implicit mc: MarkerContext): Future[Option[Boolean]] = {
     val clientFuture = clientRepository.get(ClientId(id))
     val params = TransferParameterInterface(clientFuture, bank, receiver, amount)
-    requestter.run(params)
+    requester.run(params)
     clientFuture.map { _.map(clientData => clientData.withdraw(amount.toFloat))}
   }
 }
