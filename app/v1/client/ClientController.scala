@@ -7,7 +7,7 @@ import play.api.libs.json.{JsObject, JsString, Json}
 import play.api.mvc._
 import scala.concurrent.{ExecutionContext, Future}
 
-case class ClientFormInput(name: String, initial: String)
+case class ClientFormInput(name: String, balance: String)
 
 /**
   * Takes HTTP requests and produces JSON.
@@ -23,7 +23,7 @@ class ClientController @Inject()(cc: ClientControllerComponents)(implicit ec: Ex
     Form(
       mapping(
         "name" -> nonEmptyText,
-        "initial" -> text
+        "balance" -> text
       )(ClientFormInput.apply)(ClientFormInput.unapply)
     )
   }
@@ -57,31 +57,26 @@ class ClientController @Inject()(cc: ClientControllerComponents)(implicit ec: Ex
     }
   }
 
-  def balance(id: String): Action[AnyContent] = ClientAction.async { implicit request =>
-    logger.trace(s"balance: id = $id")
-    clientResourceHandler.getBalance(id).map { client =>
-      Ok(Json.toJson(client))
-    }
-  }
-
-  def withdraw(id: String, amount: String): Action[AnyContent] = ClientAction.async { implicit request =>
+  def withdraw(id: String, amount: Float): Action[AnyContent] = ClientAction.async { implicit request =>
     logger.trace(s"withdraw: id = $id; amount = $amount")
     clientResourceHandler.makeWithdraw(id, amount).map { client =>
       Ok(Json.toJson(client))
     }
   }
 
-  def deposit(id: String, amount: String): Action[AnyContent] = ClientAction.async { implicit request =>
+  def deposit(id: String, amount: Float): Action[AnyContent] = ClientAction.async { implicit request =>
     logger.trace(s"deposit: id = $id; amount = $amount")
     clientResourceHandler.makeDeposit(id, amount).map { client =>
       Ok(Json.toJson(client))
     }
   }
 
-  def internalTransfer(id:String, receiver: String, amount: String): Action[AnyContent] = ClientAction.async { implicit request =>
-    logger.trace(s"internalTransfer: id = $id; receiverId = $receiver; amount = $amount")
-    clientResourceHandler.makeInternalTransfer(id, receiver, amount).map { client =>
-      Ok(Json.toJson(client))
+  def internalTransfer(id: String, receiverId: String, amount: Float): Action[AnyContent] = ClientAction.async { implicit request =>
+    logger.trace(s"internalTransfer: id = $id; receiverId = $receiverId; amount = $amount")
+    clientResourceHandler.makeInternalTransfer(id, receiverId, amount).map { result =>
+      Ok(JsObject(Seq(
+        "message" -> JsString(s"sucessfully transferred $$$amount from client #$id to #$receiverId")
+      )))
     }
   }
 

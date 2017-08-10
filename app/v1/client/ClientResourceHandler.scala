@@ -1,9 +1,7 @@
 package v1.client
 
 import javax.inject.{Inject, Provider}
-
 import play.api.MarkerContext
-
 import scala.concurrent.{ExecutionContext, Future}
 import play.api.libs.json._
 import services.{TransferParameterInterface, TransferRequest}
@@ -11,7 +9,7 @@ import services.{TransferParameterInterface, TransferRequest}
 /**
   * DTO for displaying client information.
   */
-case class ClientResource(id: String, link: String, name: String, initial: String)
+case class ClientResource(id: String, link: String, name: String, balance: String)
 
 object ClientResource {
 
@@ -24,7 +22,7 @@ object ClientResource {
         "id" -> client.id,
         "link" -> client.link,
         "name" -> client.name,
-        "initial" -> client.initial
+        "balance" -> BigDecimal(client.balance).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
       )
     }
   }
@@ -39,14 +37,14 @@ class ClientResourceHandler @Inject()(
 
   def create(clientInput: ClientFormInput)(implicit mc: MarkerContext): Future[ClientResource] = {
     val nextId = clientRepository.nextId()
-    val data = ClientData(ClientId(nextId.toString), clientInput.name, clientInput.initial)
+    val data = ClientData(ClientId(nextId.toString), clientInput.name, clientInput.balance.toFloat)
     clientRepository.create(data).map { id =>
       createClientResource(data)
     }
   }
 
   def lookup(id: String)(implicit mc: MarkerContext): Future[Option[ClientResource]] = {
-    val clientFuture = clientRepository.get(ClientId(id))
+    val clientFuture = clientRepository.getOne(ClientId(id))
     clientFuture.map { maybeClientData =>
       maybeClientData.map { clientData =>
         createClientResource(clientData)
@@ -63,31 +61,22 @@ class ClientResourceHandler @Inject()(
   def remove(id: String)(implicit mc: MarkerContext): Unit = clientRepository.delete(ClientId(id))
 
   private def createClientResource(p: ClientData): ClientResource = {
-    ClientResource(p.id.toString, routerProvider.get.link(p.id), p.name, p.initial)
+    ClientResource(p.id.toString, routerProvider.get.link(p.id), p.name, p.balance.toString)
   }
 
-  def getBalance(id: String)(implicit mc: MarkerContext): Future[Option[String]] = {
-    val clientFuture = clientRepository.get(ClientId(id))
-    clientFuture.map { _.map(clientData => clientData.balance)
-    }
+  def makeWithdraw(id: String, amount: Float)(implicit mc: MarkerContext): Future[ClientResource] = {
+    val clientFuture = clientRepository.withdraw(ClientId(id), amount)
+    clientFuture.map(clientData => createClientResource(clientData))
   }
 
-  def makeWithdraw(id: String, amount: String)(implicit mc: MarkerContext): Future[Option[Boolean]] = {
-    val clientFuture = clientRepository.get(ClientId(id))
-    clientFuture.map { _.map(clientData => clientData.withdraw(amount.toFloat))
-    }
+  def makeDeposit(id: String, amount: Float)(implicit mc: MarkerContext): Future[ClientResource] = {
+    val clientFuture = clientRepository.deposit(ClientId(id), amount)
+    clientFuture.map(clientData => createClientResource(clientData))
   }
 
-  def makeDeposit(id: String, amount: String)(implicit mc: MarkerContext): Future[Option[Boolean]] = {
-    val clientFuture = clientRepository.get(ClientId(id))
-    clientFuture.map { _.map(clientData => clientData.deposit(amount.toFloat))
-    }
-  }
 
-  def makeInternalTransfer(id: String, receiver: String, amount: String)(implicit mc: MarkerContext): Future[Option[Boolean]] = {
-    val clientFuture = clientRepository.get(ClientId(id))
-    val receiverClient = clientRepository.getOne(ClientId(receiver))
-    clientFuture.map { _.map(_.transfer(receiverClient, amount.toFloat))}
+  def makeInternalTransfer(id: String, receiverId: String, amount: Float)(implicit mc: MarkerContext): Future[Unit] = {
+    clientRepository.internalTransfer(ClientId(id), ClientId(receiverId), amount)
   }
 
   def makeExternalTransfer(id: String, targetBankId: String, receiverId: String, amount: String)(implicit mc: MarkerContext): Future[Option[Boolean]] = {

@@ -1,7 +1,6 @@
 package v1.client
 
 import javax.inject.Inject
-
 import play.api.routing.Router.Routes
 import play.api.routing.SimpleRouter
 import play.api.routing.sird._
@@ -31,17 +30,14 @@ class ClientRouter @Inject()(controller: ClientController) extends SimpleRouter 
     case DELETE(p"/$id") =>
       controller.remove(id)
 
-    case GET(p"/$id/saldo") =>
-      controller.balance(id)
-
     case POST(p"/$id/saque/$amount") =>
-      controller.withdraw(id, amount)
+      controller.withdraw(id, amount.toFloat)
 
     case POST(p"/$id/deposito/$amount") =>
-      controller.deposit(id, amount)
+      controller.deposit(id, amount.toFloat)
 
     case POST(p"/$id/transferencia/$receiverId/$amount") =>
-      controller.internalTransfer(id, receiverId, amount)
+      controller.internalTransfer(id, receiverId, amount.toFloat)
 
     case POST(p"/$id/TED/$targetBankId/$receiverId/$amount") =>
       controller.externalTransfer(id, targetBankId, receiverId, amount)

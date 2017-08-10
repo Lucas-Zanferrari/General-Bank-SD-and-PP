@@ -70,7 +70,7 @@ class ErrorHandler(environment: Environment,
       request: RequestHeader,
       exception: UsefulException): Future[Result] = {
     Future.successful(
-      InternalServerError(Json.obj("exception" -> exception.toString)))
+      InternalServerError(Json.obj("exception" -> exception.description)))
   }
 
   override protected def onProdServerError(
