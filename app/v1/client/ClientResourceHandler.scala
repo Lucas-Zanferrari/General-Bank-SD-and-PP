@@ -6,7 +6,7 @@ import play.api.MarkerContext
 
 import scala.concurrent.{ExecutionContext, Future}
 import play.api.libs.json._
-import services.TransferRequest
+import services.{TransferParameterInterface, TransferRequest}
 
 /**
   * DTO for displaying client information.
@@ -35,12 +35,11 @@ object ClientResource {
   */
 class ClientResourceHandler @Inject()(
     routerProvider: Provider[ClientRouter],
-    clientRepository: ClientRepository)(implicit ec: ExecutionContext) {
+    clientRepository: ClientRepository, requestter: TransferRequest)(implicit ec: ExecutionContext) {
 
   def create(clientInput: ClientFormInput)(implicit mc: MarkerContext): Future[ClientResource] = {
     val nextId = clientRepository.nextId()
     val data = ClientData(ClientId(nextId.toString), clientInput.name, clientInput.initial)
-    // We don't actually create the client, so return what we have
     clientRepository.create(data).map { id =>
       createClientResource(data)
     }
@@ -61,7 +60,7 @@ class ClientResourceHandler @Inject()(
     }
   }
 
-  def remove(id: String)(implicit mc: MarkerContext) = clientRepository.delete(ClientId(id))
+  def remove(id: String)(implicit mc: MarkerContext): Unit = clientRepository.delete(ClientId(id))
 
   private def createClientResource(p: ClientData): ClientResource = {
     ClientResource(p.id.toString, routerProvider.get.link(p.id), p.name, p.initial)
@@ -88,11 +87,13 @@ class ClientResourceHandler @Inject()(
   def makeInternalTransfer(id:String, receiver: String, amount: String)(implicit mc: MarkerContext): Future[Option[Boolean]] = {
     val clientFuture = clientRepository.get(ClientId(id))
     val receiverClient = clientRepository.getOne(ClientId(receiver))
-    clientFuture.map { _.map(_.transfer(receiverClient,amount.toFloat))}
+    clientFuture.map { _.map(_.transfer(receiverClient, amount.toFloat))}
   }
 
   def makeExternalTransfer(id:String, bank: String, receiver: String, amount: String)(implicit mc: MarkerContext): Future[Option[Boolean]] = {
     val clientFuture = clientRepository.get(ClientId(id))
-    //val k = new TransferRequest(clientFuture,bank,receiver,amount)
+    val params = TransferParameterInterface(clientFuture, bank, receiver, amount)
+    requestter.run(params)
+    clientFuture.map { _.map(clientData => clientData.withdraw(amount.toFloat))}
   }
 }
