@@ -30,7 +30,7 @@ import com.typesafe.config.ConfigFactory
 final class GeneralBankData {
   // These properties will need to be changed for every different bank that gets deployed
   val COMMUNICATION_PROTOCOL = "http://"
-  val CENTRAL_BANK_HOST: String = s"${COMMUNICATION_PROTOCOL}localhost:9000"
+  val CENTRAL_BANK_HOST: String = s"${COMMUNICATION_PROTOCOL}localhost:8000"
   val CENTRAL_BANK_ROOT_ENDPOINT = "/v1/bancos"
   val BANK_NAME: String = ConfigFactory.load().getString("bankName")
   val BANK_PORT: String = ConfigFactory.load().getString("http.port")
