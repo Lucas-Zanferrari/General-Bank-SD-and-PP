@@ -9,6 +9,7 @@ import play.api.libs.ws.WSClient
 import play.api.libs.json.{JsObject, Json}
 import scala.concurrent.{Await, ExecutionContext, Future, TimeoutException}
 import scala.concurrent.duration._
+import com.typesafe.config.ConfigFactory
 
 /**
   * This class demonstrates how to run code when the
@@ -31,8 +32,8 @@ final class GeneralBankData {
   val COMMUNICATION_PROTOCOL = "http://"
   val CENTRAL_BANK_HOST: String = s"${COMMUNICATION_PROTOCOL}localhost:9000"
   val CENTRAL_BANK_ROOT_ENDPOINT = "/v1/bancos"
-  val BANK_NAME: String = "Santander"
-  val BANK_PORT = "9001"
+  val BANK_NAME: String = ConfigFactory.load().getString("bankName")
+  val BANK_PORT = ConfigFactory.load().getString("http.port")
   val BANK_HOST: String = s"${InetAddress.getLocalHost.getHostAddress}"
   val BANK_JSON: JsObject = Json.obj(
     "name" -> BANK_NAME,
