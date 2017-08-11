@@ -29,9 +29,10 @@ import com.typesafe.config.ConfigFactory
 @Singleton
 final class GeneralBankData {
   // These properties will need to be changed for every different bank that gets deployed
+  val COMMUNICATION_PROTOCOL = "http://"
   val CENTRAL_BANK_HOST: String = ConfigFactory.load().getString("centralBankHost")
   val CENTRAL_BANK_ROOT_ENDPOINT = "/v1/bancos"
-  val BANK_NAME: String = ConfigFactory.load().getString("bankName")
+  val BANK_NAME: String = ConfigFactory.load().getString("bank.name")
   val BANK_PORT: String = ConfigFactory.load().getString("http.port")
   val BANK_HOST: String = s"${InetAddress.getLocalHost.getHostAddress}"
   val BANK_JSON: JsObject = Json.obj(
@@ -59,8 +60,7 @@ class StartupJob @Inject()(b: GeneralBankData, ws: WSClient, appLifecycle: Appli
           Logger.info(s"${b.BANK_NAME}@${b.BANK_HOST} registered successfully with CentralBank@${b.CENTRAL_BANK_HOST}! ID is #${b.BANK_ID}")
         }
         else
-          Logger.info(s"COU with CentralBank@${b.CENTRAL_BANK_HOST}! ID is #${b.BANK_ID}")
-
+          Logger.info(s"Could not connect with CentralBank@${b.CENTRAL_BANK_HOST}...")
       }
       .recover {
         case e: TimeoutException => Logger.info(s"CentralBank@${b.CENTRAL_BANK_HOST} did not respond before timeout.")
