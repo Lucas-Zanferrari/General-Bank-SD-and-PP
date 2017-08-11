@@ -78,7 +78,7 @@ class ClientResourceHandler @Inject()(
     clientRepository.internalTransfer(ClientId(id), ClientId(receiverId), amount)
   }
 
-  def makeExternalTransfer(id: String, targetBankId: String, receiverId: String, amount: Float)(implicit mc: MarkerContext): Future[Unit] = {
+  def makeExternalTransfer(id: String, targetBankId: String, receiverId: String, amount: Float)(implicit mc: MarkerContext): Future[Boolean] = {
     clientRepository.externalTransfer(ClientId(id), targetBankId, ClientId(receiverId), amount)
   }
 }

@@ -9,9 +9,7 @@ import play.api.libs.concurrent.CustomExecutionContext
 import play.api.{Logger, MarkerContext}
 import play.api.libs.ws.WSClient
 
-import scala.concurrent.duration._
-import scala.concurrent.{Await, Future, TimeoutException}
-import scala.util.{Failure, Success}
+import scala.concurrent.{Await, Future}
 
 final case class ClientData(id: ClientId, name: String, var balance: Float)
 
@@ -53,7 +51,7 @@ trait ClientRepository {
 
   def internalTransfer(id: ClientId, receivedId: ClientId, amount: Float)(implicit mc: MarkerContext): Future[Unit]
 
-  def externalTransfer(id: ClientId, targetBankId: String, receiverId: ClientId, amount: Float): Future[Unit]
+  def externalTransfer(id: ClientId, targetBankId: String, receiverId: ClientId, amount: Float): Future[Boolean]
 }
 /**
   * A trivial implementation for the Client Repository.
@@ -108,57 +106,59 @@ class ClientRepositoryImpl @Inject()(ws: WSClient, b: GeneralBankData)(implicit 
         depositHelper(receiverId, amount)
       }
       catch {
-        case e: Exception => {
+        case e: Exception =>
           depositHelper(id, amount)
           throw e
-        }
       }
     }
   }
 
-  override def externalTransfer(id: ClientId, targetBankId: String, receiverId: ClientId, amount: Float): Future[Unit] = {
+  override def externalTransfer(id: ClientId, targetBankId: String, receiverId: ClientId, amount: Float): Future[Boolean] = {
     Future {
+      var result = false
       try {
         withdrawHelper(id, amount)
-      }
-      catch {
-        case e: Exception => throw e
-      }
-      val getTargetHost = ws.url(s"${b.CENTRAL_BANK_HOST}${b.CENTRAL_BANK_ROOT_ENDPOINT}/$targetBankId")
-        .withRequestTimeout(b.REQUEST_TIMEOUT)
-        .get()
-        .onComplete {
-          case Success(getHostResponse) => {
+        val firstRequest = ws.url(s"${b.CENTRAL_BANK_HOST}${b.CENTRAL_BANK_ROOT_ENDPOINT}/$targetBankId")
+          .withRequestTimeout(b.REQUEST_TIMEOUT)
+          .get()
+          .map { getHostResponse =>
             if (getHostResponse.status == Status.OK) {
               val targetBankHost = (getHostResponse.json \ "host").as[String]
               val targetBankName = (getHostResponse.json \ "name").as[String]
-              logger.trace(s"$targetBankName@$targetBankHost was checked successfully with CentralBank@${b.CENTRAL_BANK_HOST}! Host is #$targetBankHost")
-              ws.url(s"${b.COMMUNICATION_PROTOCOL}$targetBankHost/v1/clientes/$receiverId/deposito/$amount")
+              println(s"$targetBankName@$targetBankHost was checked successfully with CentralBank@${b.CENTRAL_BANK_HOST}! Host is #$targetBankHost")
+              val secondRequest = ws.url(s"${b.COMMUNICATION_PROTOCOL}$targetBankHost/v1/clientes/$receiverId/deposito/$amount")
                 .withRequestTimeout(b.REQUEST_TIMEOUT)
                 .post("")
                 .map { sendDepositResponse =>
                   if (sendDepositResponse.status == Status.OK) {
-                    logger.trace(s"${b.BANK_NAME}@${b.BANK_HOST} transferred successfully with CentralBank@${b.CENTRAL_BANK_HOST}! Target host is #$targetBankHost")
+                    result = true
+                    println(s"${b.BANK_NAME}@${b.BANK_HOST}: transferred successfully with CentralBank@${b.CENTRAL_BANK_HOST}! Target host is #$targetBankHost")
                   }
                   else {
                     depositHelper(id, amount)
-                    logger.trace(s"${b.BANK_NAME}@${b.BANK_HOST} could not transfer to target bank host $targetBankHost and client #$receiverId")
-                    throw new RuntimeException(s"An error error occurred during external transfer " +
-                      s"from client #${id.toString}@${b.BANK_NAME} to #${receiverId.toString}@$targetBankName." +
-                      s"Please contact the target bank the target bank administrator.")
+                    println(s"${b.BANK_NAME}@${b.BANK_HOST}: client #$receiverId does not exist on host $targetBankHost")
                   }
                 }
+              Await.result(secondRequest, b.REQUEST_TIMEOUT)
             }
             else {
               depositHelper(id, amount)
-              throw new RuntimeException(s"Could not find bank #$receiverId")
+              println(s"${b.BANK_NAME}@${b.BANK_HOST}: could not validate existence of bank #$targetBankId")
             }
+          }.recover {
+            case e: Exception =>
+              depositHelper(id, amount)
+              println(s"${b.BANK_NAME}@${b.BANK_HOST}: bank #$targetBankId is not in Central Bank list, therefore it's considered nonexistent")
           }
-          case Failure(e) => e match {
-            case e: TimeoutException => logger.trace(s"CentralBank@${b.CENTRAL_BANK_HOST} did not respond before timeout.")
-            case e: Exception => logger.trace(s"${b.BANK_NAME}@${b.BANK_HOST}: [Error] - ${e.getMessage}")
-          }
+        Await.result(firstRequest, b.REQUEST_TIMEOUT)
       }
+      catch {
+        case e: Exception =>
+          depositHelper(id, amount)
+          println(s"${b.BANK_NAME}@${b.BANK_HOST}: [Error] - ${e.getMessage}")
+          throw e
+      }
+      result
     }
   }
 

@@ -59,7 +59,8 @@ class StartupJob @Inject()(b: GeneralBankData, ws: WSClient, appLifecycle: Appli
           Logger.info(s"${b.BANK_NAME}@${b.BANK_HOST} registered successfully with CentralBank@${b.CENTRAL_BANK_HOST}! ID is #${b.BANK_ID}")
         }
         else
-          Logger.info(s"Could not register bank with CentralBank@${b.CENTRAL_BANK_HOST}...")
+          Logger.info(s"COU with CentralBank@${b.CENTRAL_BANK_HOST}! ID is #${b.BANK_ID}")
+
       }
       .recover {
         case e: TimeoutException => Logger.info(s"CentralBank@${b.CENTRAL_BANK_HOST} did not respond before timeout.")

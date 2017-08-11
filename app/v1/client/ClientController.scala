@@ -83,9 +83,15 @@ class ClientController @Inject()(cc: ClientControllerComponents)(implicit ec: Ex
   def externalTransfer(id: String, targetBankId: String, receiverId: String, amount: Float): Action[AnyContent] = ClientAction.async { implicit request =>
     logger.trace(s"externalTransfer: id = $id; target bank = $targetBankId; receiverId = $receiverId; amount = $amount")
     clientResourceHandler.makeExternalTransfer(id, targetBankId, receiverId, amount).map { result =>
-      Ok(JsObject(Seq(
-        "message" -> JsString(s"sucessfully transferred $$$amount externally from client #$id to #$receiverId")
-      )))
+      if (result)
+        Ok(JsObject(Seq(
+          "message" -> JsString(s"sucessfully transferred $$$amount externally from client #$id to #$receiverId")
+        )))
+      else
+        InternalServerError(JsObject(Seq(
+          "exception" -> JsString(s"could not transfer $$$amount externally" +
+            s" from client #$id to #$receiverId. Check the external bank availability and try again")
+        )))
     }
   }
 
