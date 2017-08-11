@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="871ea55b-30dc-4209-af82-3147ca398bed" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/scala_compiler.xml" afterPath="$PROJECT_DIR$/.idea/scala_compiler.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/services/StartupJob.scala" afterPath="$PROJECT_DIR$/app/services/StartupJob.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/v1/client/ClientController.scala" afterPath="$PROJECT_DIR$/app/v1/client/ClientController.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/v1/client/ClientRepository.scala" afterPath="$PROJECT_DIR$/app/v1/client/ClientRepository.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/v1/client/ClientResourceHandler.scala" afterPath="$PROJECT_DIR$/app/v1/client/ClientResourceHandler.scala" />
     </list>
     <ignored path="$PROJECT_DIR$/target/streams/" />
     <ignored path="$PROJECT_DIR$/docs/target/" />
@@ -29,68 +25,7 @@
     </projectState>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="StartupJob.scala" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/services/StartupJob.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1224">
-              <caret line="72" column="0" lean-forward="true" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
-              <folding>
-                <element signature="e#18#39#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ClientRouter.scala" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/v1/client/ClientRouter.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="271">
-              <caret line="35" column="42" lean-forward="false" selection-start-line="35" selection-start-column="42" selection-end-line="35" selection-end-column="42" />
-              <folding>
-                <element signature="e#19#45#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ClientController.scala" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/v1/client/ClientController.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1260">
-              <caret line="89" column="10" lean-forward="false" selection-start-line="89" selection-start-column="10" selection-end-line="89" selection-end-column="10" />
-              <folding>
-                <element signature="e#19#45#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ClientResourceHandler.scala" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/v1/client/ClientResourceHandler.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1377">
-              <caret line="81" column="4" lean-forward="false" selection-start-line="81" selection-start-column="4" selection-end-line="81" selection-end-column="4" />
-              <folding>
-                <element signature="e#19#57#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ClientRepository.scala" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/v1/client/ClientRepository.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2550">
-              <caret line="150" column="56" lean-forward="false" selection-start-line="150" selection-start-column="56" selection-end-line="150" selection-end-column="56" />
-              <folding>
-                <element signature="e#19#58#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -129,6 +64,7 @@
         <option value="$PROJECT_DIR$/app/v1/client/ClientResourceHandler.scala" />
         <option value="$PROJECT_DIR$/app/v1/client/ClientController.scala" />
         <option value="$PROJECT_DIR$/app/v1/client/ClientRepository.scala" />
+        <option value="$PROJECT_DIR$/app/v1/client/ClientActionBuilder.scala" />
         <option value="$PROJECT_DIR$/app/services/StartupJob.scala" />
       </list>
     </option>
@@ -410,7 +346,7 @@
       <workItem from="1501971371520" duration="661000" />
       <workItem from="1502139703675" duration="1877000" />
       <workItem from="1502151456642" duration="19852000" />
-      <workItem from="1502379647111" duration="42754000" />
+      <workItem from="1502379647111" duration="43133000" />
     </task>
     <task id="LOCAL-00001" summary="Changing front page content.">
       <created>1502140220028</created>
@@ -489,11 +425,18 @@
       <option name="project" value="LOCAL" />
       <updated>1502419204856</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="adding validation to external transfer">
+      <created>1502427224768</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1502427224768</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="66985000" />
+    <option name="totallyTimeSpent" value="67364000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -506,7 +449,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32894737" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -522,7 +464,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23298033" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23298033" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="sbt-shell-toolwindow" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -588,7 +530,8 @@
     <MESSAGE value="adapting inputs and outputs to REST format" />
     <MESSAGE value="commenting broken code (for now)" />
     <MESSAGE value="tenta ae gustavo" />
-    <option name="LAST_COMMIT_MESSAGE" value="tenta ae gustavo" />
+    <MESSAGE value="adding validation to external transfer" />
+    <option name="LAST_COMMIT_MESSAGE" value="adding validation to external transfer" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -811,13 +754,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/conf/application.conf">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/.ivy2/cache/com.typesafe.play/play_2.11/srcs/play_2.11-2.6.2-sources.jar!/play/api/mvc/RequestHeader.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="245">
@@ -825,42 +761,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Module.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="17" column="30" lean-forward="false" selection-start-line="17" selection-start-column="30" selection-end-line="17" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/index.scala.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/v1/client/ClientActionBuilder.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.11.11-sources.jar!/scala/math/BigDecimal.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="194">
           <caret line="663" column="6" lean-forward="false" selection-start-line="663" selection-start-column="6" selection-end-line="663" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/RequestHandler.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-18">
-          <caret line="23" column="59" lean-forward="false" selection-start-line="23" selection-start-column="58" selection-end-line="23" selection-end-column="59" />
           <folding />
         </state>
       </provider>
@@ -877,14 +781,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="390">
           <caret line="128" column="9" lean-forward="false" selection-start-line="128" selection-start-column="9" selection-end-line="128" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/ErrorHandler.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="271">
-          <caret line="70" column="53" lean-forward="true" selection-start-line="70" selection-start-column="52" selection-end-line="70" selection-end-column="53" />
           <folding />
         </state>
       </provider>
@@ -921,6 +817,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/conf/application.conf">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/controllers/HomeController.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
@@ -931,13 +835,35 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/services/StartupJob.scala">
+    <entry file="file://$PROJECT_DIR$/app/RequestHandler.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1224">
-          <caret line="72" column="0" lean-forward="true" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
-          <folding>
-            <element signature="e#18#39#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="306">
+          <caret line="23" column="59" lean-forward="false" selection-start-line="23" selection-start-column="58" selection-end-line="23" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Module.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="17" column="30" lean-forward="false" selection-start-line="17" selection-start-column="30" selection-end-line="17" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/ErrorHandler.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1003">
+          <caret line="70" column="53" lean-forward="true" selection-start-line="70" selection-start-column="52" selection-end-line="70" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/index.scala.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="24" column="7" lean-forward="true" selection-start-line="24" selection-start-column="7" selection-end-line="24" selection-end-column="7" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -951,9 +877,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/v1/client/ClientActionBuilder.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="186">
+          <caret line="73" column="18" lean-forward="false" selection-start-line="73" selection-start-column="13" selection-end-line="73" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/services/StartupJob.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-460">
+          <caret line="41" column="17" lean-forward="true" selection-start-line="41" selection-start-column="17" selection-end-line="41" selection-end-column="17" />
+          <folding>
+            <element signature="e#18#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/v1/client/ClientController.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1260">
+        <state relative-caret-position="1141">
           <caret line="89" column="10" lean-forward="false" selection-start-line="89" selection-start-column="10" selection-end-line="89" selection-end-column="10" />
           <folding>
             <element signature="e#19#45#0" expanded="true" />
@@ -963,7 +907,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/v1/client/ClientResourceHandler.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1377">
+        <state relative-caret-position="425">
           <caret line="81" column="4" lean-forward="false" selection-start-line="81" selection-start-column="4" selection-end-line="81" selection-end-column="4" />
           <folding>
             <element signature="e#19#57#0" expanded="true" />
@@ -973,7 +917,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/v1/client/ClientRepository.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2550">
+        <state relative-caret-position="1241">
           <caret line="150" column="56" lean-forward="false" selection-start-line="150" selection-start-column="56" selection-end-line="150" selection-end-column="56" />
           <folding>
             <element signature="e#19#58#0" expanded="true" />

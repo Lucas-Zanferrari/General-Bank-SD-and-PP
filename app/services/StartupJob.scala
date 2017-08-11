@@ -33,7 +33,7 @@ final class GeneralBankData {
   val CENTRAL_BANK_HOST: String = s"${COMMUNICATION_PROTOCOL}localhost:9000"
   val CENTRAL_BANK_ROOT_ENDPOINT = "/v1/bancos"
   val BANK_NAME: String = ConfigFactory.load().getString("bankName")
-  val BANK_PORT = ConfigFactory.load().getString("http.port")
+  val BANK_PORT: String = ConfigFactory.load().getString("http.port")
   val BANK_HOST: String = s"${InetAddress.getLocalHost.getHostAddress}"
   val BANK_JSON: JsObject = Json.obj(
     "name" -> BANK_NAME,
