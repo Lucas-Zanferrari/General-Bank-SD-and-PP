@@ -4,7 +4,6 @@ import javax.inject.{Inject, Provider}
 import play.api.MarkerContext
 import scala.concurrent.{ExecutionContext, Future}
 import play.api.libs.json._
-import services.{TransferParameterInterface, TransferRequest}
 
 /**
   * DTO for displaying client information.
@@ -33,7 +32,7 @@ object ClientResource {
   */
 class ClientResourceHandler @Inject()(
     routerProvider: Provider[ClientRouter],
-    clientRepository: ClientRepository, requester: TransferRequest)(implicit ec: ExecutionContext) {
+    clientRepository: ClientRepository)(implicit ec: ExecutionContext) {
 
   def create(clientInput: ClientFormInput)(implicit mc: MarkerContext): Future[ClientResource] = {
     val nextId = clientRepository.nextId()
@@ -79,10 +78,7 @@ class ClientResourceHandler @Inject()(
     clientRepository.internalTransfer(ClientId(id), ClientId(receiverId), amount)
   }
 
-//  def makeExternalTransfer(id: String, targetBankId: String, receiverId: String, amount: String)(implicit mc: MarkerContext): Future[Option[Boolean]] = {
-//    val clientFuture = clientRepository.get(ClientId(id))
-//    val params = TransferParameterInterface(targetBankId, receiverId, amount)
-//    requester.run(params)
-//    clientFuture.map { _.map(clientData => clientData.withdraw(amount.toFloat))}
-//  }
+  def makeExternalTransfer(id: String, targetBankId: String, receiverId: String, amount: Float)(implicit mc: MarkerContext): Future[Unit] = {
+    clientRepository.externalTransfer(ClientId(id), targetBankId, ClientId(receiverId), amount)
+  }
 }

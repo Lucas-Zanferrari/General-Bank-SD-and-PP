@@ -26,9 +26,10 @@ import scala.concurrent.duration._
   */
 
 @Singleton
-class GeneralBankData {
+final class GeneralBankData {
   // These properties will need to be changed for every different bank that gets deployed
-  val CENTRAL_BANK_HOST: String = "http://localhost:9000"
+  val COMMUNICATION_PROTOCOL = "http://"
+  val CENTRAL_BANK_HOST: String = s"${COMMUNICATION_PROTOCOL}localhost:9000"
   val CENTRAL_BANK_ROOT_ENDPOINT = "/v1/bancos"
   val BANK_NAME: String = "Santander"
   val BANK_PORT = "9001"
@@ -37,7 +38,9 @@ class GeneralBankData {
     "name" -> BANK_NAME,
     "host" -> s"$BANK_HOST:$BANK_PORT"
   )
-  var bankId = 0
+  var BANK_ID = 0
+  val REQUEST_TIMEOUT: FiniteDuration = 30.seconds
+
 }
 
 @Singleton
@@ -52,9 +55,11 @@ class StartupJob @Inject()(b: GeneralBankData, ws: WSClient, appLifecycle: Appli
       .post(b.BANK_JSON)
       .map { response =>
         if (response.status == Status.CREATED) {
-          b.bankId = Integer.parseInt((response.json \ "id").as[String])
-          Logger.info(s"${b.BANK_NAME}@${b.BANK_HOST} registered successfully with CentralBank@${b.CENTRAL_BANK_HOST}! ID is #${b.bankId}")
+          b.BANK_ID = Integer.parseInt((response.json \ "id").as[String])
+          Logger.info(s"${b.BANK_NAME}@${b.BANK_HOST} registered successfully with CentralBank@${b.CENTRAL_BANK_HOST}! ID is #${b.BANK_ID}")
         }
+        else
+          Logger.info(s"Could not register bank with CentralBank@${b.CENTRAL_BANK_HOST}...")
       }
       .recover {
         case e: TimeoutException => Logger.info(s"CentralBank@${b.CENTRAL_BANK_HOST} did not respond before timeout.")
@@ -70,7 +75,7 @@ class StartupJob @Inject()(b: GeneralBankData, ws: WSClient, appLifecycle: Appli
   // be run when the application stops.
   appLifecycle.addStopHook { () =>
     Logger.info(s"Bank is going offline. A notification will be sent to CentralBank@${b.CENTRAL_BANK_HOST}.")
-    val receivedResponse = ws.url(s"${b.CENTRAL_BANK_HOST}${b.CENTRAL_BANK_ROOT_ENDPOINT}/${b.bankId}")
+    val receivedResponse = ws.url(s"${b.CENTRAL_BANK_HOST}${b.CENTRAL_BANK_ROOT_ENDPOINT}/${b.BANK_ID}")
       .withRequestTimeout(REQUEST_TIMEOUT)
       .delete()
       .map { response =>
